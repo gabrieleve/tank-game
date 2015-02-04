@@ -1,0 +1,87 @@
+ /*Style Sheet for tank mayhem website */
+
+body {
+    font-size: 100%;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    margin: 0 auto;
+    width: 600px;
+}
+
+h1, footer {
+    text-align: center;
+}
+
+canvas { /*why does nothing change when i modify these??*/
+    position: absolute;
+    left: 20;
+    top: 30;
+    width: 600px;
+    height: 480px;
+    /*image-rendering: -webkit-optimize-contrast;*/
+}
+
+#canvas-1 {
+    z-index: -1;
+}
+
+#canvas-2 {
+    z-index: 0;
+}
+
+#canvas-3 {
+    z-index: 1;
+}
+
+#copy-notice {
+    font-family: "La Belle Aurore", cursive;
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+#game-div {
+    position: relative;
+    /*margin: 0 auto;*/
+    /*display: inline-block;*/
+    width: 600px;
+    height: 480px;
+    margin: 1em auto;
+    border: 1px dashed black;
+}
+
+#hp-p1, #hp-p2 {
+    visibility: hidden;
+}
+
+#hp-p1 {
+    text-align: right;
+    color: red
+}
+
+#hp-p2 {
+    text-align: left;
+    color: blue
+}
+
+footer {
+    font-size: 0.8em;
+    text-align: center;
+}
+
+
+a {
+    color: black;
+    text-decoration: none;
+    border-bottom: 1px dotted;
+    display: inline-block;
+    line-height: 9px;
+    list-style-type: none;
+}
+
+a:hover {
+    /*text-decoration: underline;*/
+    border-bottom: 1px solid;
+}
+
+/*a:active {
+    text-decoration: underline;
+}*/
