@@ -37,7 +37,7 @@ window.onload = function () {
         dy: [],
         elements: [],
         tanks: [],
-        requestId
+        requestId: []
     };
 
     game.hpDisp.push(document.getElementById("hp-p1"));
