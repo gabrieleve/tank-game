@@ -15,7 +15,7 @@ window.onload = function () {
 
         SCALE: 6,
         SPEED: 3,                          // number of pixels per frames
-        NUM_ROTATIONS: Math.ceil(100 / SPEED) * 4,
+        NUM_ROTATIONS: Math.ceil(100 / game.SPEED) * 4,
         WW: 5,         // Wall width
         controls1: [37, 39, 38, 40, 77],   // keyboard controls
         controls2: [83, 70, 69, 68, 81],
@@ -37,17 +37,17 @@ window.onload = function () {
         dy: [],
         elements: [],
         tanks: [],
-        requestID
+        requestId
     };
 
     game.hpDisp.push(document.getElementById("hp-p1"));
     game.hpDisp.push(document.getElementById("hp-p2"));
 
     // Pre calculate angles and x,y increments
-    for (var i = NUM_ROTATIONS - 1; i >= 0; i -= 1) {
-        game.theta[i] = (i / NUM_ROTATIONS) * 2 * Math.PI;
-        game.dx[i] = Math.cos(theta[i]);
-        game.dy[i] = Math.sin(theta[i]);
+    for (var i = game.NUM_ROTATIONS - 1; i >= 0; i -= 1) {
+        game.theta[i] = (i / game.NUM_ROTATIONS) * 2 * Math.PI;
+        game.dx[i] = Math.cos(game.theta[i]);
+        game.dy[i] = Math.sin(game.theta[i]);
     }
 
     // function returning a randomly generated integer between and including 0 and max
@@ -62,10 +62,10 @@ window.onload = function () {
     // Tank object
     function Tank(color, keys) {
 
-        var w = 3 * SCALE,                        // width
-            l = 4 * SCALE,                        // length
-            spd = SPEED,                   // [px/frame] speed
-            spdR = SPEED / 2,              // reverse speed
+        var w = 3 * game.SCALE,                        // width
+            l = 4 * game.SCALE,                        // length
+            spd = game.SPEED,                   // [px/frame] SPEED
+            spdR = game.SPEED / 2,              // reverse SPEED
             color = color,
             left = keys[0],
             right = keys[1],
@@ -73,11 +73,11 @@ window.onload = function () {
             down = keys[3],
             fire = keys[4],
             ammo = 6,                      // num of bullet ammunition
-            x = Math.random() * canvas2.width * 0.8 + canvas2.width * 0.1,
-            y = Math.random() * canvas2.height * 0.8 + canvas2.height * 0.1,
-            d = Math.floor(Math.random() * NUM_ROTATIONS),
+            x = Math.random() * game.canvas2.width * 0.8 + game.canvas2.width * 0.1,
+            y = Math.random() * game.canvas2.height * 0.8 + game.canvas2.height * 0.1,
+            d = Math.floor(Math.random() * game.NUM_ROTATIONS),
             hp = 100,                       // health
-            number = tankNumber + 1,
+            number = game.tankNumber + 1,
             wobble = 0;
 
         this.getHp = function () {return hp;};
@@ -88,10 +88,10 @@ window.onload = function () {
         this.update = function () {
             var b;
             // Update directional index based on turning right/left and wobble
-            if (keysPressed[left]) {
+            if (game.keysPressed[left]) {
                 d -= 1;
             }
-            if (keysPressed[right]) {
+            if (game.keysPressed[right]) {
                 d += 1;
             }
             // Damage penalty
@@ -99,29 +99,29 @@ window.onload = function () {
                 d += randi(2) - 1;
             }
             if (d < 0) {
-                d += NUM_ROTATIONS;
-            } else if (d >= NUM_ROTATIONS) {
-                d -= NUM_ROTATIONS;
+                d += game.NUM_ROTATIONS;
+            } else if (d >= game.NUM_ROTATIONS) {
+                d -= game.NUM_ROTATIONS;
             }
             // Move forward or reverse
-            if (keysPressed[up]) {
-                x += dx[d] * spd;
-                y += dy[d] * spd;
-            } else if (keysPressed[down]) {
-                x -= dx[d] * spdR;
-                y -= dy[d] * spdR;
+            if (game.keysPressed[up]) {
+                x += game.dx[d] * spd;
+                y += game.dy[d] * spd;
+            } else if (game.keysPressed[down]) {
+                x -= game.dx[d] * spdR;
+                y -= game.dy[d] * spdR;
             }
             // Fire a bullet when triggered
-            if (keysDown[fire]) {
+            if (game.keysDown[fire]) {
                 if (ammo > 0) {
-                    elements.push(new Bullet(x + dx[d] * 40, y + dy[d] * 40, d, this))
+                    game.elements.push(new Bullet(x + game.dx[d] * 40, y + game.dy[d] * 40, d, this))
                     ammo -= 1;
                 }
-                keysDown[fire] = false;
+                game.keysDown[fire] = false;
             }
             // Collision with bullets
-            for (var i = elements.length - 1; i >= 0; i -= 1) {
-                b = elements[i];
+            for (var i = game.elements.length - 1; i >= 0; i -= 1) {
+                b = game.elements[i];
                 if (b instanceof Bullet) {
                     var X2 = Math.pow(x - b.getX(), 2),
                         Y2 = Math.pow(y - b.getY(), 2),
@@ -130,7 +130,7 @@ window.onload = function () {
                         b.setT(1);
                         b.setColor("red");
                         hp -= b.getDamage();
-                        hpDisp[number].innerHTML = "hp: " + hp;
+                        game.hpDisp[number].innerHTML = "hp: " + hp;
                     }
                 }
             }
@@ -138,26 +138,26 @@ window.onload = function () {
 
         // Draw tank on canvas
         this.draw = function () {
-            ctx2.save();
-            ctx2.translate(x, y);
-            ctx2.rotate(theta[d]);
-            ctx2.fillStyle = color;
-            ctx2.fillRect(-l, -w, l * 2, w * 2);
-            ctx2.fillStyle = "black";
-            ctx2.fillRect(-l * 0.5, -w * 0.4, l * 2, w * 0.8);
-            ctx2.restore();
+            game.ctx2.save();
+            game.ctx2.translate(x, y);
+            game.ctx2.rotate(game.theta[d]);
+            game.ctx2.fillStyle = color;
+            game.ctx2.fillRect(-l, -w, l * 2, w * 2);
+            game.ctx2.fillStyle = "black";
+            game.ctx2.fillRect(-l * 0.5, -w * 0.4, l * 2, w * 0.8);
+            game.ctx2.restore();
         }
     }
 
 
     // Bullet object
     function Bullet(x, y, d, owner) {
-        var w = SCALE,                         // radius
-            x = x, //t.x + dx[t.d] * 40;        // x-coordinate
-            y = y, //t.y + dy[t.d] * 40;        // y-coordinate
-            u = 3.5 * SPEED * dx[d],       // x-component of velocity
-            v = 3.5 * SPEED * dy[d],       // y-component of velocity
-            t = 15 * 60 / SPEED,                    // time until expiry
+        var w = game.SCALE,                         // radius
+            x = x, //t.x + game.dx[t.d] * 40;        // x-coordinate
+            y = y, //t.y + game.dy[t.d] * 40;        // y-coordinate
+            u = 3.5 * game.SPEED * game.dx[d],       // x-component of velocity
+            v = 3.5 * game.SPEED * game.dy[d],       // y-component of velocity
+            t = 15 * 60 / game.SPEED,                    // time until expiry
             color = "#" + randi(999),
             owner = owner,
             damage = 34,
@@ -183,19 +183,19 @@ window.onload = function () {
                 w *= 1.1;
                 op -= 0.1;
             }
-            
+
             // Wall collision
-            var ix = Math.floor((x - WW) / gridResolution),
-                iy = Math.floor((y - WW) / gridResolution),
+            var ix = Math.floor((x - game.WW) / gridResolution),
+                iy = Math.floor((y - game.WW) / gridResolution),
                 a = ix + iy * m,
                 xlim = x + u/2,
                 ylim = y + v/2;
                 // va = [a-m, a-m+1, a, a+1, a+m, a+m+1],
                 // ha = [a-1, a, a+1, a+m-1, a+m, a+m+1];
-            if ((xlim - w < ix * gridResolution + WW && verticalMapElements[a]) || (xlim + w > (ix+1) * gridResolution - WW && verticalMapElements[a+1])) {
+            if ((xlim - w < ix * gridResolution + game.WW && verticalMapelements[a]) || (xlim + w > (ix+1) * gridResolution - game.WW && verticalMapelements[a+1])) {
                 u = -u;
             }
-            if ((ylim - w < iy * gridResolution + WW && horizontalMapElements[a]) || (ylim + w > (iy+1) * gridResolution - WW && horizontalMapElements[a+m])) {
+            if ((ylim - w < iy * gridResolution + game.WW && horizontalMapelements[a]) || (ylim + w > (iy+1) * gridResolution - game.WW && horizontalMapelements[a+m])) {
                 v = -v;
             }
             // Update position
@@ -206,42 +206,42 @@ window.onload = function () {
         }
 
         this.draw = function () {
-            ctx2.save();
-            ctx2.beginPath();
-            ctx2.arc(x, y, w, 0, 2 * Math.PI);
-            ctx2.globalAlpha = op;
-            ctx2.fillStyle = color;
-            ctx2.fill();
-            ctx2.restore();
+            game.ctx2.save();
+            game.ctx2.beginPath();
+            game.ctx2.arc(x, y, w, 0, 2 * Math.PI);
+            game.ctx2.globalAlpha = op;
+            game.ctx2.fillStyle = color;
+            game.ctx2.fill();
+            game.ctx2.restore();
         }
     }
 
 
 
-    // TODO: Initialise keysPressed to 'false' rather than 'undefined'?
+    // TODO: Initialise game.keysPressed to 'false' rather than 'undefined'?
 
     // ===================================================================== //
     // Start screen
     // ===================================================================== //
 
     startScreen("red");
-    canvas3.onclick = startGame;
-    
+    game.canvas3.onclick = startGame;
+
     function startScreen (color) {
-        ctx2.textAlign = "center";
-        ctx2.font = "normal normal bold 80px Futura";
-        ctx2.fillStyle = color;
-        ctx2.fillText("Click to start", canvas2.width / 2, canvas2.height / 2);
-        ctx2.font = "italic normal normal 40px Futura";
-        ctx2.fillStyle = "gray"
-        ctx2.fillText("(Version 0.3: Work in progress)", canvas2.width / 2, canvas2.height * 0.7);
+        game.ctx2.textAlign = "center";
+        game.ctx2.font = "normal normal bold 80px Futura";
+        game.ctx2.fillStyle = color;
+        game.ctx2.fillText("Click to start", game.canvas2.width / 2, game.canvas2.height / 2);
+        game.ctx2.font = "italic normal normal 40px Futura";
+        game.ctx2.fillStyle = "gray"
+        game.ctx2.fillText("(Version 0.3: Work in progress)", game.canvas2.width / 2, game.canvas2.height * 0.7);
     }
-    canvas3.onmouseover = function () {
-        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+    game.canvas3.onmouseover = function () {
+        game.ctx2.clearRect(0, 0, game.canvas2.width, game.canvas2.height);
         startScreen("limegreen");
     }
-    canvas3.onmouseout = function () {
-        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+    game.canvas3.onmouseout = function () {
+        game.ctx2.clearRect(0, 0, game.canvas2.width, game.canvas2.height);
         startScreen("red");
     }
 
@@ -250,24 +250,24 @@ window.onload = function () {
     // ===================================================================== //
 
     var gridResolution = 120,
-        m = canvas2.width / gridResolution + 1,
-        n = canvas2.height / gridResolution + 1,
-        verticalMapElements = [],
-        horizontalMapElements = [];
+        m = game.canvas2.width / gridResolution + 1,
+        n = game.canvas2.height / gridResolution + 1,
+        verticalMapelements = [],
+        horizontalMapelements = [];
 
     // function mapGenerator() {
     //     for (var iy = n-1; iy >= 0; iy -= 1) {
     //         for (var ix = m-1; ix >= 0; ix -= 1) {
     //             var a = ix + iy * m;
     //             if (ix === 0 || ix === m-1 || Math.random() < elementRatio) {
-    //                 verticalMapElements[a] = true;
+    //                 verticalMapelements[a] = true;
     //             } else {
-    //                 verticalMapElements[a] = false;
+    //                 verticalMapelements[a] = false;
     //             }
     //             if (iy === 0 || iy === n-1 || Math.random() < elementRatio) {
-    //                 horizontalMapElements[a] = true;
+    //                 horizontalMapelements[a] = true;
     //             } else {
-    //                 horizontalMapElements[a] = false;
+    //                 horizontalMapelements[a] = false;
     //             }
     //         }
     //     }
@@ -282,8 +282,8 @@ window.onload = function () {
             squaresLeft = (m-1) * (n-1);
 
         for (var a = m*n - 1; a >= 0; a -= 1) {
-            verticalMapElements[a] = true;
-            horizontalMapElements[a] = true;
+            verticalMapelements[a] = true;
+            horizontalMapelements[a] = true;
             gridValues[a] = Math.pow(Math.random(), 20);
             squareStatus[a] = true;
         }
@@ -324,28 +324,28 @@ window.onload = function () {
 
             // go left
             if (ix !== 0 && squareStatus[a-1]) {
-                verticalMapElements[a] = false;
+                verticalMapelements[a] = false;
                 activeSet.push(new Square(ix-1, iy, val));
                 squareStatus[a-1] = false;
                 squaresLeft -= 1;
             }
             // go right
             if (ix !== m-2 && squareStatus[a+1]) {
-                verticalMapElements[a+1] = false;
+                verticalMapelements[a+1] = false;
                 activeSet.push(new Square(ix+1, iy, val));
                 squareStatus[a+1] = false;
                 squaresLeft -= 1;
             }
             // go up
             if (iy !== 0 && squareStatus[a-m]) {
-                horizontalMapElements[a] = false;
+                horizontalMapelements[a] = false;
                 activeSet.push(new Square(ix, iy-1, val));
                 squareStatus[a-m] = false;
                 squaresLeft -= 1;
             }
             // go down
             if (iy !== n-2 && squareStatus[a+m]) {
-                horizontalMapElements[a+m] = false;
+                horizontalMapelements[a+m] = false;
                 activeSet.push(new Square(ix, iy+1, val));
                 squareStatus[a+m] = false;
                 squaresLeft -= 1;
@@ -360,7 +360,7 @@ window.onload = function () {
 
 
 
-    
+
     // ===================================================================== //
     // Collisions
     // ===================================================================== //
@@ -372,16 +372,16 @@ window.onload = function () {
 
     function drawMap() {
         var x, y;
-        ctx1.fillStyle = "black"
-        for (var a = verticalMapElements.length - 1; a >= 0; a--) {
+        game.ctx1.fillStyle = "black"
+        for (var a = verticalMapgame.elements.length - 1; a >= 0; a--) {
             // draw map on grid offset by wall thickness
-            x = (a % m) * gridResolution + WW;
-            y = Math.floor(a / m) * gridResolution + WW;
-            if (verticalMapElements[a]) {
-                ctx1.fillRect(x-WW, y-WW, 2*WW, gridResolution + 2*WW);
+            x = (a % m) * gridResolution + game.WW;
+            y = Math.floor(a / m) * gridResolution + game.WW;
+            if (verticalMapelements[a]) {
+                game.ctx1.fillRect(x-game.WW, y-game.WW, 2*game.WW, gridResolution + 2*game.WW);
             }
-            if (horizontalMapElements[a]) {
-                ctx1.fillRect(x-WW, y-WW, gridResolution + 2*WW, 2*WW);
+            if (horizontalMapelements[a]) {
+                game.ctx1.fillRect(x-game.WW, y-game.WW, gridResolution + 2*game.WW, 2*game.WW);
             }
         }
     }
@@ -395,40 +395,40 @@ window.onload = function () {
 
     function startLoop() {
         // intervalLoop = window.setInterval(gameloop, 17);
-        requestID = window.requestAnimationFrame(gameLoop);
+        game.requestId = window.requestAnimationFrame(gameLoop);
     }
     function stopLoop() {
         // window.clear(intervalLoop);
-        window.cancelAnimationFrame(requestID);
+        window.cancelAnimationFrame(game.requestId);
     }
 
     function startGame() {
-        ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
-        canvas3.onclick = null;
-        canvas3.onmouseover = null;
-        canvas3.onmouseout = null;
-        elements.push(new Tank("red", controls1), new Tank("blue", controls2));
+        game.ctx3.clearRect(0, 0, game.canvas3.width, game.canvas3.height);
+        game.canvas3.onclick = null;
+        game.canvas3.onmouseover = null;
+        game.canvas3.onmouseout = null;
+        game.elements.push(new Tank("red", game.controls1), new Tank("blue", game.controls2));
 
         // Show player health
-        hpDisp[0].style.visibility = "visible";
-        hpDisp[1].style.visibility = "visible";
+        game.hpDisp[0].style.visibility = "visible";
+        game.hpDisp[1].style.visibility = "visible";
 
         // Set event handlers for key presses
         document.onkeydown = function (e) {
-            if (e.keyCode === esc && keysDown[esc]) {
-                keysDown[esc] = false;
+            if (e.keyCode === game.esc && game.keysDown[game.esc]) {
+                game.keysDown[game.esc] = false;
                 startLoop();
             } else {
-                keysDown[e.keyCode] = true;         // Detect if key has been pressed
+                game.keysDown[e.keyCode] = true;         // Detect if key has been pressed
             }
-            keysPressed[e.keyCode] = true;      // Change key status to 'in use'
+            game.keysPressed[e.keyCode] = true;      // Change key status to 'in use'
 
             // alert(e.keyCode);                // Displays the key code when pressed
             // disable default document behaviour of keys (e.g. arrow keys scrolling)
             if (e.preventDefault) {e.preventDefault(); }
         };
         document.onkeyup = function (e) {
-            keysPressed[e.keyCode] = false;     // Change key status to 'not in use'
+            game.keysPressed[e.keyCode] = false;     // Change key status to 'not in use'
         };
         mapGenerator2();
         drawMap();
@@ -436,30 +436,30 @@ window.onload = function () {
     }
 
     // ===================================================================== //
-    // Game loop 
+    // Game loop
     // ===================================================================== //
 
     // function gameloop() {
-    //     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+    //     game.ctx2.clearRect(0, 0, game.canvas2.width, game.canvas2.height);
     //     updateBullets(bullets);
     //     drawBullets(bullets);
-    //     for (i = tanks.length - 1; i >= 0; i--) {
-    //         updateTank(tanks[i]);
-    //         drawTank(tanks[i]);
+    //     for (i = game.tanks.length - 1; i >= 0; i--) {
+    //         updateTank(game.tanks[i]);
+    //         drawTank(game.tanks[i]);
     //     }
-    //     if (keysDown[esc]) {
-    //         ctx2.font = "40px Futura";
-    //         ctx2.globalAlpha = 0.7;
-    //         ctx2.fillStyle = "white";
-    //         ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
-    //         ctx2.globalAlpha = 1;
-    //         ctx2.fillStyle = "black";
-    //         ctx2.fillText("Paused", canvas2.width / 2, canvas2.height / 2);
+    //     if (game.keysDown[game.esc]) {
+    //         game.ctx2.font = "40px Futura";
+    //         game.ctx2.globalAlpha = 0.7;
+    //         game.ctx2.fillStyle = "white";
+    //         game.ctx2.fillRect(0, 0, game.canvas2.width, game.canvas2.height);
+    //         game.ctx2.globalAlpha = 1;
+    //         game.ctx2.fillStyle = "black";
+    //         game.ctx2.fillText("Paused", game.canvas2.width / 2, game.canvas2.height / 2);
     //         window.clearInterval(intervalLoop);
     //     }
-    //     for (i = tanks.length - 1; i >= 0; i -= 1) {
-    //         if (tanks[i].hp <= 0) {
-    //             endGame(tanks[i]);
+    //     for (i = game.tanks.length - 1; i >= 0; i -= 1) {
+    //         if (game.tanks[i].hp <= 0) {
+    //             endGame(game.tanks[i]);
     //         }
     //     }
     // }
@@ -467,53 +467,53 @@ window.onload = function () {
     // Main menu
     function mainMenu() {
         stopLoop();
-        ctx2.save();
-        ctx2.font = "40px Futura";
-        ctx2.globalAlpha = 0.7;
-        ctx2.fillStyle = "white";
-        ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
-        ctx2.globalAlpha = 1;
-        ctx2.fillStyle = "black";
-        ctx2.fillText("Paused", canvas2.width / 2, canvas2.height / 2);
-        ctx2.restore();
+        game.ctx2.save();
+        game.ctx2.font = "40px Futura";
+        game.ctx2.globalAlpha = 0.7;
+        game.ctx2.fillStyle = "white";
+        game.ctx2.fillRect(0, 0, game.canvas2.width, game.canvas2.height);
+        game.ctx2.globalAlpha = 1;
+        game.ctx2.fillStyle = "black";
+        game.ctx2.fillText("Paused", game.canvas2.width / 2, game.canvas2.height / 2);
+        game.ctx2.restore();
         //TODO: add event listener to startLoop
     }
 
     //Clear canvas operation
     function clearCanvas() {
-        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+        game.ctx2.clearRect(0, 0, game.canvas2.width, game.canvas2.height);
     }
 
     // Gameloop to run every frame
     function gameLoop() {
         var expired;
-        // Update movement etc of all canvas elements
-        for (var i = elements.length - 1; i >= 0; i -= 1) {
-            expired = elements[i].update();
+        // Update movement etc of all canvas game.elements
+        for (var i = game.elements.length - 1; i >= 0; i -= 1) {
+            expired = game.elements[i].update();
             if (expired) {
                 // Remove element if it no longer exists
-                elements.splice(i, 1);
+                game.elements.splice(i, 1);
             }
         }
 
         // Clear the canvas
         clearCanvas();
 
-        // Redraw all elements onto the canvas
-        for (var i = elements.length - 1; i >= 0; i -= 1) {
-            elements[i].draw();
+        // Redraw all game.elements onto the canvas
+        for (var i = game.elements.length - 1; i >= 0; i -= 1) {
+            game.elements[i].draw();
         }
 
         // Check if game is over
-        for (var i = elements.length - 1; i >= 0; i--) {
-            if (elements[i] instanceof Tank && elements[i].getHp() <= 0) {
-                endGame(elements[i]);
+        for (var i = game.elements.length - 1; i >= 0; i--) {
+            if (game.elements[i] instanceof Tank && game.elements[i].getHp() <= 0) {
+                endGame(game.elements[i]);
             }
         }
 
         // Access menu
-        if (keysDown[esc]) {
-            keysDown[esc] = false;
+        if (game.keysDown[game.esc]) {
+            game.keysDown[game.esc] = false;
             mainMenu();
         }
 
@@ -527,16 +527,16 @@ window.onload = function () {
 
     function endGame(winner) {
             stopLoop();
-            ctx2.save();
-            ctx2.font = "40px Futura";
-            ctx2.globalAlpha = 0.7;
-            ctx2.fillStyle = "green";
-            ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
-            ctx2.globalAlpha = 1;
-            ctx2.fillStyle = winner.color;
-            ctx2.fillText(winner.color + " player wins", canvas2.width / 2, canvas2.height / 2);
-            ctx2.restore();
+            game.ctx2.save();
+            game.ctx2.font = "40px Futura";
+            game.ctx2.globalAlpha = 0.7;
+            game.ctx2.fillStyle = "green";
+            game.ctx2.fillRect(0, 0, game.canvas2.width, game.canvas2.height);
+            game.ctx2.globalAlpha = 1;
+            game.ctx2.fillStyle = winner.color;
+            game.ctx2.fillText(winner.color + " player wins", game.canvas2.width / 2, game.canvas2.height / 2);
+            game.ctx2.restore();
     }
 
-    // ctx2.webkitImageSmoothingEnabled = false;
+    // game.ctx2.webkitImageSmoothingEnabled = false;
 };
