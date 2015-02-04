@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <title>Tank Mayhem - free multiplayer game</title>
+    <meta name="description" content="Battle against a friend or the computer in a 2D environment with the help of a multitude of creative weapons">
+    <link rel="stylesheet" type="text/css" href="mystyles.css">
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <header>
+      <h1>Tank Mayhem!</h1>
+      <!-- <nav>
+        <a href="//dl.dropboxusercontent.com/u/20641976/tank-game/index.html">Home</a>
+      </nav> -->
+    </header>
+    <div id="game-div">
+      <canvas id="canvas-1" width="1200" height="960"></canvas>
+      <canvas id="canvas-2" width="1200" height="960"></canvas>
+      <canvas id="canvas-3" width="1200" height="960">
+        This text is displayed if your browser does not support HTML5 Canvas.
+      </canvas>
+      <p id="hp-p1">hp: 100</p>
+      <p id="hp-p2">hp: 100</p>
+    </div>
+    <footer>
+      <div id="copy-notice"><p>Copyright © 2014 Gabriel Eve - inspired by <a href="http://tanktrouble.com">Tank trouble</a> and <a href="http://playing-with-fire-game.com">Playing with fire</a></p></div>
+      <p>Updated 31 Aug 2014</p>
+    </footer>
+    <!-- Load scripts at the end of the file just before </body> tag -->
+    <!-- // <script src="scripts/jquery-2.1.1.min.js"></script> -->
+    <script src="scripts/game-logic.js"></script>
+  </body>
+</html>
