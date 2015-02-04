@@ -15,7 +15,6 @@ window.onload = function () {
 
         SCALE: 6,
         SPEED: 3,                          // number of pixels per frames
-        NUM_ROTATIONS: Math.ceil(100 / game.SPEED) * 4,
         WW: 5,         // Wall width
         controls1: [37, 39, 38, 40, 77],   // keyboard controls
         controls2: [83, 70, 69, 68, 81],
@@ -26,9 +25,6 @@ window.onload = function () {
         canvas2: document.getElementById("canvas-2"),
         canvas3: document.getElementById("canvas-3"),
         hpDisp: [],
-        ctx1: canvas1.getContext("2d"),
-        ctx2: canvas2.getContext("2d"),
-        ctx3: canvas3.getContext("2d"),
         // Game arrays
         keysDown: [],
         keysPressed: [],                   // status of depressed keys
@@ -39,6 +35,12 @@ window.onload = function () {
         tanks: [],
         requestId: []
     };
+
+    game['NUM_ROTATIONS'] = Math.ceil(100 / game.SPEED) * 4;
+    game['ctx1'] = game.canvas1.getContext("2d");
+    game['ctx2'] = game.canvas2.getContext("2d");
+    game['ctx3'] = game.canvas3.getContext("2d");
+
 
     game.hpDisp.push(document.getElementById("hp-p1"));
     game.hpDisp.push(document.getElementById("hp-p2"));
@@ -373,7 +375,7 @@ window.onload = function () {
     function drawMap() {
         var x, y;
         game.ctx1.fillStyle = "black"
-        for (var a = verticalMapgame.elements.length - 1; a >= 0; a--) {
+        for (var a = verticalMapelements.length - 1; a >= 0; a--) {
             // draw map on grid offset by wall thickness
             x = (a % m) * gridResolution + game.WW;
             y = Math.floor(a / m) * gridResolution + game.WW;
