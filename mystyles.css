@@ -1,51 +1,50 @@
  /*Style Sheet for tank mayhem website */
 
 body {
-    font-size: 100%;
+    /*font-size: 100%;*/
     font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    margin: 0 auto;
-    width: 600px;
+    margin: 0px;
+    background-color: white;
 }
 
 h1, footer {
     text-align: center;
 }
 
-canvas { /*why does nothing change when i modify these??*/
+/*width and height of canvases are exactly 0.5 the size of the real canvas to account for retina display*/
+
+canvas {
     position: absolute;
-    left: 20;
-    top: 30;
     width: 600px;
     height: 480px;
-    /*image-rendering: -webkit-optimize-contrast;*/
 }
 
-#canvas-1 {
+#game-area {
+    /*margin: 0 auto;*/
+    /*display: inline-block;*/
+    position: relative;
+    width: 600px;
+    height: 480px;
+    margin: 4rem auto 0 auto;
+    border: 2px dashed black;
+}
+
+/*#background {
     z-index: -1;
 }
 
-#canvas-2 {
+#canvas {
     z-index: 0;
 }
 
-#canvas-3 {
+#foreground {
     z-index: 1;
-}
+}*/
 
 #copy-notice {
     font-family: "La Belle Aurore", cursive;
-    font-size: 1.3em;
+    font-size: 1.3rem;
     font-weight: 500;
-}
-
-#game-div {
-    position: relative;
-    /*margin: 0 auto;*/
-    /*display: inline-block;*/
-    width: 600px;
-    height: 480px;
-    margin: 1em auto;
-    border: 1px dashed black;
 }
 
 #hp-p1, #hp-p2 {
@@ -63,7 +62,7 @@ canvas { /*why does nothing change when i modify these??*/
 }
 
 footer {
-    font-size: 0.8em;
+    font-size: 0.8rem;
     text-align: center;
 }
 
@@ -85,3 +84,70 @@ a:hover {
 /*a:active {
     text-decoration: underline;
 }*/
+
+.menu-bar-container {
+    height: 3.5rem;
+    z-index: 10;
+    margin: 0 auto;
+    padding: 0.2rem 30px;
+    background: rgba(28, 149, 158, 0.81);
+}
+
+.menu-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 auto;
+    max-width: 740px;
+    min-width: 544px;
+}
+
+#logo {
+    height: 60%;
+}
+
+.menu-item ul li{
+    list-style: none;
+    /*padding: 0.2rem;*/
+}
+
+.menu-item {
+    padding: 0.2rem;
+    margin: 0;
+    text-align: center;
+}
+
+.menu-item:hover {
+    background-color: darkslateblue;
+    color: white;
+    border-top-color: white;
+    border-radius: 0.3rem;
+}
+
+.menu-item * {
+    margin: 0;
+}
+
+.menu-item li > ul {
+    /*display: none;*/
+}
+
+
+/*TODO: increases page length*/
+#space {
+    height: 20rem;
+}
+
+.caret {
+border-left: 0.25rem solid transparent;
+border-right: 0.25rem solid transparent;
+border-top: 0.25rem solid #4DC5EA;
+/*color: #FFFFFF;*/
+content: "";
+display: inline-block;
+font-size: 1.5rem;
+height: 0;
+width: 0;
+margin: 0 0.2rem;
+}
